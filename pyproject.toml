@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "django-sqlcommenter"
+version = "0.1"
+description = "instrument sql queries on django servers"
+authors = ["Yash Kumar Verma <yk.verma2000@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.8,<=3.14"
+django = ">=2.2,<5.0"
+django-prometheus = "^2.4.1"
+
+
+[tool.poetry.group.test.dependencies]
+pytest = "^8.3.4"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
