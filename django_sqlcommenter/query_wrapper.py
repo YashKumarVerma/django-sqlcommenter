@@ -35,5 +35,5 @@ class QueryWrapper:
             app_name=app_name,
         )
         DJANGO_SQL_COMMENTER_METRIC.labels(controller=controller, route=route, app_name=app_name).inc()
-        logger.info("Captured query: %s, %s, %s, %s", sql, controller, route, app_name)
+        logger.info(f"Captured query: {sql}, {controller}, {route}, {app_name}")
         return execute(sql, params, many, context)
