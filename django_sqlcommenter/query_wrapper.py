@@ -1,5 +1,6 @@
 import logging
 
+import django
 from prometheus_client import Counter
 
 from .utils import add_sql_comment
@@ -10,6 +11,7 @@ DJANGO_SQL_COMMENTER_METRIC = Counter(
     name="django_sql_commenter_metric",
     documentation="queries initiated via django requests",
     labelnames=[
+        "project",
         "controller",
         "route",
         "app_name"
@@ -22,6 +24,8 @@ class QueryWrapper:
         self.request = request
 
     def __call__(self, execute, sql, params, many, context):
+        project = getattr(django.conf.settings, 'SQLCOMMENTER_PROJECT_ID', 'untagged')
+
         resolver_match = self.request.resolver_match
 
         controller = resolver_match.view_name if resolver_match else "none"
@@ -34,6 +38,5 @@ class QueryWrapper:
             route=route,
             app_name=app_name,
         )
-        DJANGO_SQL_COMMENTER_METRIC.labels(controller=controller, route=route, app_name=app_name).inc()
-        logger.info(f"Captured query: {sql}, {controller}, {route}, {app_name}")
+        DJANGO_SQL_COMMENTER_METRIC.labels(project=project, controller=controller, route=route, app_name=app_name).inc()
         return execute(sql, params, many, context)
